@@ -1,0 +1,144 @@
+<html>
+<head>
+<title>RIP Paw 2k18</title>
+<link href="https://fonts.googleapis.com/css?family=Rubik+Mono+One" rel="stylesheet">
+<style>
+	* {
+		padding: 0;
+		margin: 0;
+	}
+	html {
+		height: 100vh;
+		overflow: hidden;
+		position: relative;
+		background: #000;
+		text-align: center;
+	}
+	.block {
+		top: -10vh;
+		min-height: 50px;
+		min-width: 50px;
+		background: #ccc;
+		position: absolute;
+		
+	}
+	.slideDown  {
+		top: 100vh;
+	}
+	h1 {
+		position: relative;
+		display: inline-block;
+		max-width: 400px;
+		width: 100%;
+		color: #fff;
+		font-weight: 600;
+		font-size: 45px;
+		margin-top: 40px;
+		font-family: 'Rubik Mono One', sans-serif;
+	}
+
+	h2 {
+		position: relative;
+		display: block;
+		text-align: center;
+		width: 100%;
+		color: #fff;
+		font-weight: 600;
+		font-size: 30px;
+		margin-top: 30px;
+		font-family: 'Rubik Mono One', sans-serif;
+	}
+	.died {
+		display: inline-block;
+	}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+	$(function() {
+		var items = ['1.gif','2.jpg', '3.gif', '4.gif', '5.png','6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png', '13.png', '14.gif' ,'15.gif'];
+		var spawnedItems = [];
+		var viewportTop = $(window).scrollTop();
+		var viewportBottom = viewportTop + $(window).height();
+		var viewportWidth = $(window).width();
+		var viewportHeight = $(window).height();
+		var maxHorizontal;
+		var died = 0;
+
+		function spawn_block(items, spawnedItems) {
+			var max = items.length - 1;
+			var min = 0;
+			var rand = getRandomIntInclusive(min, max);
+			d = $("<div>");
+			maxHorizontal = (viewportWidth - 300);
+			$(d)
+			.addClass('block')
+			.append('<img src="'+items[rand]+'"/>')
+			.appendTo($('body'))
+			.css({
+				'left' : randomHorizontal()+'px',
+				'z-index' : getRandomIntInclusive(0, 20),
+				'transition' : getRandomIntInclusive(10000, 14000)+'ms'
+			});
+			
+			spawnedItems.push(d);
+		}
+
+		function getRandomIntInclusive(min, max) {
+		  min = Math.ceil(min);
+		  max = Math.floor(max);
+		  return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		function randomHorizontal() {
+			var x = getRandomIntInclusive(0, maxHorizontal);
+			return x;
+		}
+
+		function check_items(spawnedItems) {
+			spawn_block(items, spawnedItems);
+			for (i = 0; i < spawnedItems.length; i++) {
+				var item = spawnedItems[i];
+				var elementTop = $(item).offset().top;
+		    	var elementBottom = elementTop + $(item).outerHeight();
+				if(isInViewport(elementTop, elementBottom)){
+					$(item).addClass('slideDown')
+				}else {
+					$(item).remove();
+				}
+			}
+		}
+
+		$(window).resize(function() {
+			viewportTop = $(window).scrollTop();
+		    viewportBottom = viewportTop + $(window).height();
+		    viewportWidth = $(window).width();
+		    viewportHeight = $(window).height();
+		})
+
+		window.setInterval(function () {
+			check_items(spawnedItems);
+		}, getRandomIntInclusive(800, 1400))
+
+		window.setInterval(function () {
+			diedplus();
+		}, 1000)
+
+		function diedplus() {
+			died = died + 1;
+			$('.died').html(died);
+		}
+
+		function isInViewport(elementTop, elementBottom) {
+		    return elementTop < viewportBottom;
+		};
+	});
+</script>
+</head>
+<audio id="song" autoplay="true" loop="">
+<source src="./how.mp3" type="audio/mp3"> 
+</audio>
+<body>
+<h1>RIP Paw 2k18</h1>
+<h2><div class="died">0</div> Paws died</h2>
+</body>
+</html>
